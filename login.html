@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SONHO | Acesso ao Sistema</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #f3f4f6;
+    font-family: Arial, sans-serif;
+}
+
+.login {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 38px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.logo {
+    text-align: center;
+    font-size: 34px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #172554;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #64748b;
+    margin: 10px 0 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    color: #334155;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #172554;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#mensagem {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: #b91c1c;
+}
+
+.rodape {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 28px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login">
+
+    <div class="logo">SONHO</div>
+    <div class="subtitulo">Sistema de Atendimento Digital</div>
+
+    <form id="formLogin">
+
+        <label for="email">E-mail</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            required
+        >
+
+        <label for="senha">Senha</label>
+        <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            required
+        >
+
+        <button type="submit" id="botao">
+            ENTRAR NO SISTEMA
+        </button>
+
+    </form>
+
+    <div id="mensagem"></div>
+
+    <div class="rodape">
+        SONHO © 2026
+    </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = "https://lnshxkewxryybsabvukt.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable__2IEddOn2DZQSC9M5yMA4A_8F1IT2QM";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const form = document.getElementById("formLogin");
+const mensagem = document.getElementById("mensagem");
+const botao = document.getElementById("botao");
+
+async function verificarSessao() {
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+        window.location.href = "index.html";
+    }
+}
+
+verificarSessao();
+
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    botao.disabled = true;
+    botao.textContent = "ENTRANDO...";
+    mensagem.textContent = "";
+
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: senha
+    });
+
+    if (error) {
+        mensagem.textContent = "E-mail ou senha incorretos. Verifique os dados.";
+        botao.disabled = false;
+        botao.textContent = "ENTRAR NO SISTEMA";
+        return;
+    }
+
+    window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>
