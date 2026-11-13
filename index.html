@@ -718,12 +718,16 @@ async function protegerPainel() {
             .eq("id", usuarioAuth.id)
             .maybeSingle();
 
-        if (vinculoErro || !vinculo) {
-            await sonhoClient.auth.signOut();
-            alert("Esta conta ainda não está vinculada a um estabelecimento. Procure o administrador.");
-            window.location.replace("login.html");
-            return;
-        }
+       if (vinculoErro || !vinculo) {
+    console.error("ERRO AO BUSCAR VÍNCULO:", vinculoErro);
+
+    alert(
+        "Erro ao buscar vínculo: " +
+        (vinculoErro?.message || "Nenhum vínculo encontrado.")
+    );
+
+    return;
+}
 
         const { data: estabelecimento, error: estabelecimentoErro } =
             await sonhoClient
