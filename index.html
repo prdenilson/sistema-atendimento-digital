@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Atendimento Digital</title>
+
+<style>
+:root {
+  --primary: #5b45d6;
+  --primary-dark: #4633b5;
+  --bg: #f5f6fa;
+  --white: #ffffff;
+  --text: #25243a;
+  --muted: #85859a;
+  --border: #ececf2;
+  --green: #159b68;
+  --orange: #e99a35;
+  --red: #df5555;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #211d38;
+  color: white;
+  padding: 25px 16px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+}
+
+.logo {
+  font-size: 19px;
+  font-weight: bold;
+  padding: 8px 10px 30px;
+  line-height: 1.5;
+}
+
+.logo span {
+  color: #a99aff;
+}
+
+.menu-label {
+  color: #aaa6c0;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 15px 10px 10px;
+}
+
+.menu button {
+  width: 100%;
+  padding: 13px 12px;
+  margin: 3px 0;
+  border: 0;
+  border-radius: 8px;
+  color: #d4d1e2;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.menu button:hover,
+.menu button.active {
+  background: var(--primary);
+  color: white;
+}
+
+.main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-width: 0;
+}
+
+.topbar {
+  background: white;
+  padding: 18px 30px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar h2 {
+  font-size: 18px;
+}
+
+.topbar small {
+  color: var(--muted);
+}
+
+.profile {
+  font-size: 13px;
+  background: #f1efff;
+  color: var(--primary);
+  padding: 10px 14px;
+  border-radius: 20px;
+}
+
+.content {
+  padding: 30px;
+  max-width: 1500px;
+  margin: auto;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.welcome {
+  margin-bottom: 25px;
+}
+
+.welcome h1 {
+  font-size: 25px;
+  margin-bottom: 7px;
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 17px;
+  margin-bottom: 25px;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 21px;
+}
+
+.stat .label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 13px;
+}
+
+.stat .number {
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.stat .note {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 9px;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 22px;
+  overflow-x: auto;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.panel-header h3 {
+  font-size: 16px;
+}
+
+button.primary {
+  border: 0;
+  border-radius: 7px;
+  padding: 11px 16px;
+  color: white;
+  background: var(--primary);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button.primary:hover {
+  background: var(--primary-dark);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+th, td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 13px;
+}
+
+th {
+  color: var(--muted);
+  font-weight: normal;
+  background: #fafafe;
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.green {
+  background: #e4f7ee;
+  color: var(--green);
+}
+
+.orange {
+  background: #fff2df;
+  color: #bb751e;
+}
+
+.red {
+  background: #ffebeb;
+  color: var(--red);
+}
+
+.gray {
+  background: #eeeef3;
+  color: #777;
+}
+
+.empty {
+  padding: 40px 15px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.page-title {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.page-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.notice {
+  background: #fff8e8;
+  border: 1px solid #f4dfae;
+  color: #795c22;
+  border-radius: 9px;
+  padding: 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media(max-width: 1000px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 700px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 10;
+    transition: .2s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .topbar {
+    padding: 15px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .content {
+    padding: 18px 14px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat {
+    padding: 15px;
+  }
+
+  .stat .number {
+    font-size: 22px;
+  }
+
+  .welcome h1 {
+    font-size: 21px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+
+  <div class="logo">
+    ATENDIMENTO<br>
+    <span>DIGITAL</span>
+  </div>
+
+  <div class="menu-label">PRINCIPAL</div>
+
+  <nav class="menu">
+    <button class="active" onclick="showPage('dashboard',this)">▦ &nbsp; Visão geral</button>
+    <button onclick="showPage('pedidos',this)">🛍 &nbsp; Pedidos</button>
+    <button onclick="showPage('produtos',this)">▤ &nbsp; Produtos</button>
+    <button onclick="showPage('categorias',this)">▦ &nbsp; Categorias</button>
+    <button onclick="showPage('mesas',this)">▣ &nbsp; Mesas</button>
+
+    <div class="menu-label">GESTÃO</div>
+
+    <button onclick="showPage('pagamentos',this)">💳 &nbsp; Pagamentos</button>
+    <button onclick="showPage('avaliacoes',this)">★ &nbsp; Avaliações</button>
+    <button onclick="showPage('relatorios',this)">▥ &nbsp; Relatórios</button>
+
+    <div class="menu-label">CONFIGURAÇÕES</div>
+
+    <button onclick="showPage('estabelecimento',this)">⚙ &nbsp; Estabelecimento</button>
+  </nav>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div>
+      <h2 id="topTitle">Visão geral</h2>
+      <small>Painel administrativo</small>
+    </div>
+  </div>
+
+  <div class="profile">● Administrador</div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+
+<section class="page active" id="dashboard">
+
+  <div class="welcome">
+    <h1>Bem-vindo ao seu painel!</h1>
+    <p>Gerencie seu estabelecimento em um só lugar.</p>
+  </div>
+
+  <div class="notice">
+    Ambiente inicial de demonstração. Os indicadores abaixo são ilustrativos e ainda não representam dados reais do Supabase.
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <div class="label">Pedidos hoje</div>
+      <div class="number">0</div>
+      <div class="note">Pedidos recebidos</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">Faturamento hoje</div>
+      <div class="number">R$ 0,00</div>
+      <div class="note">Vendas registradas</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">Mesas ativas</div>
+      <div class="number">0</div>
+      <div class="note">Mesas em atendimento</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">Avaliação média</div>
+      <div class="number">—</div>
+      <div class="note">Avaliações dos clientes</div>
+    </div>
+
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-header">
+      <h3>Pedidos recentes</h3>
+      <button class="primary" onclick="showPage('pedidos',document.querySelectorAll('.menu button')[1])">
+        Ver pedidos
+      </button>
+    </div>
+
+    <div class="empty">
+      <div style="font-size:35px;margin-bottom:10px">🛍</div>
+      Nenhum pedido registrado ainda.
+    </div>
+
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Atalhos rápidos</h3>
+    </div>
+
+    <button class="primary" onclick="showPage('produtos',document.querySelectorAll('.menu button')[2])">
+      Cadastrar produtos
+    </button>
+
+    <button class="primary" style="margin-left:8px" onclick="showPage('mesas',document.querySelectorAll('.menu button')[4])">
+      Gerenciar mesas
+    </button>
+  </div>
+
+</section>
+
+<!-- PEDIDOS -->
+
+<section class="page" id="pedidos">
+
+  <h1 class="page-title">Pedidos</h1>
+  <p class="page-description">Acompanhe os pedidos recebidos pelo sistema.</p>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Todos os pedidos</h3>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Cliente</th>
+          <th>Mesa</th>
+          <th>Valor</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="5" class="empty">Nenhum pedido encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+<!-- PRODUTOS -->
+
+<section class="page" id="produtos">
+
+  <h1 class="page-title">Produtos</h1>
+  <p class="page-description">Gerencie os produtos disponíveis no cardápio.</p>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Catálogo de produtos</h3>
+      <button class="primary" onclick="alert('O cadastro será conectado ao Supabase na próxima etapa.')">
+        + Novo produto
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Disponibilidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" class="empty">Nenhum produto cadastrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+<!-- CATEGORIAS -->
+
+<section class="page" id="categorias">
+
+  <h1 class="page-title">Categorias</h1>
+  <p class="page-description">Organize os produtos do seu cardápio.</p>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Categorias cadastradas</h3>
+      <button class="primary" onclick="alert('O cadastro será conectado ao Supabase na próxima etapa.')">
+        + Nova categoria
+      </button>
+    </div>
+    <div class="empty">Nenhuma categoria cadastrada.</div>
+  </div>
+
+</section>
+
+<!-- MESAS -->
+
+<section class="page" id="mesas">
+
+  <h1 class="page-title">Mesas</h1>
+  <p class="page-description">Gerencie as mesas e os respectivos QR Codes.</p>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Gerenciamento de mesas</h3>
+      <button class="primary" onclick="alert('O cadastro será conectado ao Supabase na próxima etapa.')">
+        + Nova mesa
+      </button>
+    </div>
+    <div class="empty">Nenhuma mesa cadastrada.</div>
+  </div>
+
+</section>
+
+<!-- PAGAMENTOS -->
+
+<section class="page" id="pagamentos">
+
+  <h1 class="page-title">Pagamentos</h1>
+  <p class="page-description">Acompanhe os pagamentos dos pedidos.</p>
+
+  <div class="panel">
+    <div class="empty">Nenhum pagamento registrado.</div>
+  </div>
+
+</section>
+
+<!-- AVALIAÇÕES -->
+
+<section class="page" id="avaliacoes">
+
+  <h1 class="page-title">Avaliações</h1>
+  <p class="page-description">Veja a opinião dos seus clientes.</p>
+
+  <div class="panel">
+    <div class="empty">Nenhuma avaliação recebida.</div>
+  </div>
+
+</section>
+
+<!-- RELATÓRIOS -->
+
+<section class="page" id="relatorios">
+
+  <h1 class="page-title">Relatórios</h1>
+  <p class="page-description">Indicadores e desempenho do estabelecimento.</p>
+
+  <div class="panel">
+    <div class="empty">Os relatórios estarão disponíveis após a integração dos dados.</div>
+  </div>
+
+</section>
+
+<!-- ESTABELECIMENTO -->
+
+<section class="page" id="estabelecimento">
+
+  <h1 class="page-title">Estabelecimento</h1>
+  <p class="page-description">Configurações gerais do estabelecimento.</p>
+
+  <div class="panel">
+    <div class="empty">As configurações serão disponibilizadas na próxima etapa.</div>
+  </div>
+
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+
+function showPage(page, button) {
+
+  document.querySelectorAll('.page').forEach(function(section) {
+    section.classList.remove('active');
+  });
+
+  document.getElementById(page).classList.add('active');
+
+  document.querySelectorAll('.menu button').forEach(function(item) {
+    item.classList.remove('active');
+  });
+
+  if(button) {
+    button.classList.add('active');
+  }
+
+  const titles = {
+    dashboard: 'Visão geral',
+    pedidos: 'Pedidos',
+    produtos: 'Produtos',
+    categorias: 'Categorias',
+    mesas: 'Mesas',
+    pagamentos: 'Pagamentos',
+    avaliacoes: 'Avaliações',
+    relatorios: 'Relatórios',
+    estabelecimento: 'Estabelecimento'
+  };
+
+  document.getElementById('topTitle').textContent = titles[page];
+
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleMenu() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+</script>
+
+</body>
+</html>
