@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Atendimento Digital</title>
+<title>SONHO | Painel administrativo</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
@@ -27,6 +28,7 @@
 }
 
 body {
+  visibility: hidden;
   font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -111,11 +113,24 @@ body {
 }
 
 .profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 13px;
   background: #f1efff;
   color: var(--primary);
   padding: 10px 14px;
   border-radius: 20px;
+}
+
+.logout-button {
+  border: 0;
+  border-radius: 7px;
+  padding: 9px 12px;
+  color: white;
+  background: #df5555;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .content {
@@ -393,7 +408,10 @@ th {
     </div>
   </div>
 
-  <div class="profile">● Administrador</div>
+  <div class="profile">
+     <span id="identificacaoUsuario">Verificando acesso...</span>
+     <button class="logout-button" id="botaoSair" type="button">Sair</button>
+   </div>
 </header>
 
 <div class="content">
@@ -670,6 +688,83 @@ function toggleMenu() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
+</script>
+
+
+<script>
+const SUPABASE_URL = "https://lnshxkewxryybsabvukt.supabase.co";
+const SUPABASE_KEY = "sb_publishable__2IEddOn2DZQSC9M5yMA4A_8F1IT2QM";
+
+const sonhoClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function protegerPainel() {
+    const identificacao = document.getElementById("identificacaoUsuario");
+    const botaoSair = document.getElementById("botaoSair");
+
+    try {
+        const { data: sessaoData, error: sessaoErro } =
+            await sonhoClient.auth.getSession();
+
+        if (sessaoErro || !sessaoData.session) {
+            window.location.replace("login.html");
+            return;
+        }
+
+        const usuarioAuth = sessaoData.session.user;
+
+        const { data: vinculo, error: vinculoErro } = await sonhoClient
+            .from("usuarios_estabelecimento")
+            .select("nome, perfil, estabelecimento_id")
+            .eq("id", usuarioAuth.id)
+            .maybeSingle();
+
+        if (vinculoErro || !vinculo) {
+            await sonhoClient.auth.signOut();
+            alert("Esta conta ainda não está vinculada a um estabelecimento. Procure o administrador.");
+            window.location.replace("login.html");
+            return;
+        }
+
+        const { data: estabelecimento, error: estabelecimentoErro } =
+            await sonhoClient
+                .from("estabelecimentos")
+                .select("nome")
+                .eq("id", vinculo.estabelecimento_id)
+                .maybeSingle();
+
+        if (estabelecimentoErro || !estabelecimento) {
+            await sonhoClient.auth.signOut();
+            alert("Não foi possível localizar o estabelecimento desta conta.");
+            window.location.replace("login.html");
+            return;
+        }
+
+        window.sonhoSupabase = sonhoClient;
+        window.sonhoUsuario = vinculo;
+        window.sonhoEstabelecimento = estabelecimento;
+
+        identificacao.textContent =
+            (vinculo.nome || usuarioAuth.email) + " · " +
+            (vinculo.perfil || "usuário") + " · " +
+            estabelecimento.nome;
+
+        document.body.style.visibility = "visible";
+
+        botaoSair.addEventListener("click", async function() {
+            botaoSair.disabled = true;
+            botaoSair.textContent = "Saindo...";
+            await sonhoClient.auth.signOut();
+            window.location.replace("login.html");
+        });
+
+    } catch (erro) {
+        console.error("Falha ao verificar acesso:", erro);
+        alert("Não foi possível verificar seu acesso. Tente novamente.");
+        window.location.replace("login.html");
+    }
+}
+
+protegerPainel();
 </script>
 
 </body>
