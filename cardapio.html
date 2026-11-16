@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173c30">
+
+<title>SONHO | Cardápio Digital</title>
+
+<style>
+:root {
+  --verde: #173c30;
+  --verde-claro: #245544;
+  --creme: #f7f3e9;
+  --branco: #fffdf8;
+  --dourado: #c7a45c;
+  --texto: #252923;
+  --cinza: #77796f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--creme);
+  color: var(--texto);
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: var(--verde);
+  color: white;
+  padding: 20px;
+}
+
+.header-content {
+  max-width: 1150px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.logo {
+  color: #f5e8c9;
+  font-family: Georgia, serif;
+  font-size: 32px;
+  letter-spacing: 4px;
+}
+
+.logo small {
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+.cart-top {
+  border: 1px solid #789183;
+  border-radius: 30px;
+  padding: 11px 16px;
+  font-size: 13px;
+}
+
+main {
+  max-width: 1150px;
+  margin: auto;
+  padding: 25px 20px 120px;
+}
+
+/* DESTAQUE */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  background: var(--branco);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px #1d332014;
+}
+
+.hero-text {
+  padding: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  color: #9b7b3d;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+h1 {
+  color: var(--verde);
+  font-family: Georgia, serif;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.1;
+  margin: 15px 0;
+}
+
+.hero p {
+  color: var(--cinza);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  min-height: 310px;
+  object-fit: cover;
+}
+
+/* CARDÁPIO */
+
+.section-title {
+  margin: 38px 0 18px;
+}
+
+.section-title h2 {
+  color: var(--verde);
+  font-family: Georgia, serif;
+  font-size: 29px;
+  margin: 0;
+}
+
+.section-title p {
+  color: var(--cinza);
+  font-size: 13px;
+}
+
+/* CATEGORIAS */
+
+.categories {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding: 5px 0 15px;
+}
+
+.categories button {
+  white-space: nowrap;
+  background: var(--branco);
+  color: var(--verde);
+  border: 1px solid #d9d2c2;
+  border-radius: 30px;
+  padding: 11px 17px;
+  cursor: pointer;
+}
+
+.categories button.active {
+  background: var(--verde);
+  color: white;
+  border-color: var(--verde);
+}
+
+/* PRODUTOS */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+}
+
+.product {
+  background: var(--branco);
+  border: 1px solid #eee8dc;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-icon {
+  width: 48px;
+  height: 48px;
+  background: #f0eadb;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  margin-bottom: 13px;
+}
+
+.product h3 {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  color: var(--verde);
+  margin: 0 0 8px;
+}
+
+.product p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--cinza);
+  margin: 0 0 15px;
+}
+
+.product select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd5c5;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 15px;
+  color: var(--texto);
+}
+
+.product-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.price {
+  font-weight: bold;
+  color: #8c6b2f;
+}
+
+.add-button {
+  background: var(--verde);
+  color: white;
+  border: 0;
+  border-radius: 30px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.add-button:hover {
+  background: var(--verde-claro);
+}
+
+/* OBSERVAÇÃO */
+
+.observation {
+  margin-top: 25px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--cinza);
+}
+
+/* CARRINHO */
+
+.cart-bar {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, calc(100% - 28px));
+  background: var(--verde);
+  color: white;
+  border-radius: 16px;
+  padding: 14px 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 8px 30px #0003;
+  z-index: 10;
+}
+
+.cart-bar strong {
+  font-size: 14px;
+}
+
+.cart-bar span {
+  font-size: 12px;
+  color: #e4ddce;
+}
+
+.cart-bar button {
+  background: var(--dourado);
+  color: #172d23;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* CELULAR */
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero img {
+    grid-row: 1;
+    min-height: 220px;
+    max-height: 270px;
+  }
+
+  .hero-text {
+    padding: 25px;
+  }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    padding: 0 2px;
+  }
+
+  .logo {
+    font-size: 25px;
+  }
+
+  main {
+    padding: 18px 14px 110px;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .product {
+    min-height: 160px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">
+      SONHO
+      <small>CAFÉ DA MANHÃ • CARDÁPIO</small>
+    </div>
+
+    <div class="cart-top">
+      Meu pedido: <b id="topCount">0</b>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+
+    <div class="hero-text">
+      <div class="eyebrow">Um bom dia começa aqui</div>
+
+      <h1>Seu café da manhã, do seu jeito.</h1>
+
+      <p>
+        Escolha suas opções favoritas, personalize os recheios
+        e aproveite. Tudo preparado com carinho para começar
+        bem o seu dia.
+      </p>
+    </div>
+
+    <img
+      src="cafe-da-manha-sonho.png"
+      alt="Café da manhã SONHO"
+    >
+
+  </section>
+
+  <div class="section-title">
+    <h2>Nosso cardápio</h2>
+    <p>Escolha seus produtos favoritos.</p>
+  </div>
+
+  <nav class="categories" id="categories">
+
+    <button class="active" data-cat="Todos">Tudo</button>
+    <button data-cat="Tapiocas">Tapiocas</button>
+    <button data-cat="Cuscuz">Cuscuz</button>
+    <button data-cat="Pães">Pães recheados</button>
+    <button data-cat="Bebidas">Bebidas</button>
+    <button data-cat="Outros">Outros</button>
+
+  </nav>
+
+  <section class="products" id="products"></section>
+
+  <p class="observation">
+    Os produtos e preços apresentados são ilustrativos.
+    O cardápio ainda não está conectado ao sistema de pedidos.
+  </p>
+
+</main>
+
+<div class="cart-bar">
+
+  <div>
+    <strong id="cartCount">0 itens</strong>
+    <br>
+    <span id="cartTotal">Total: R$ 0,00</span>
+  </div>
+
+  <button onclick="showOrder()">Ver pedido</button>
+
+</div>
+
+<script>
+
+const products = [
+
+  {
+    name: "Tapioca com queijo",
+    cat: "Tapiocas",
+    desc: "Tapioca quentinha com queijo derretido.",
+    price: 9,
+    icon: "🫓",
+    options: ["Sem recheio adicional", "Frango", "Presunto", "Carne de sol"]
+  },
+
+  {
+    name: "Tapioca completa",
+    cat: "Tapiocas",
+    desc: "Uma opção reforçada para começar o dia.",
+    price: 13,
+    icon: "🫓",
+    options: ["Sem recheio adicional", "Frango", "Presunto", "Carne de sol"]
+  },
+
+  {
+    name: "Cuscuz com frango",
+    cat: "Cuscuz",
+    desc: "Cuscuz macio com frango temperado.",
+    price: 12,
+    icon: "🍽️",
+    options: ["Sem recheio adicional", "Queijo", "Presunto", "Ovo"]
+  },
+
+  {
+    name: "Cuscuz com queijo",
+    cat: "Cuscuz",
+    desc: "Cuscuz tradicional com queijo.",
+    price: 10,
+    icon: "🍽️",
+    options: ["Sem recheio adicional", "Frango", "Presunto", "Ovo"]
+  },
+
+  {
+    name: "Pão com queijo e presunto",
+    cat: "Pães",
+    desc: "Pão macio, tostado e recheado.",
+    price: 10,
+    icon: "🥪",
+    options: ["Sem recheio adicional", "Frango", "Ovo", "Carne de sol"]
+  },
+
+  {
+    name: "Pão com frango",
+    cat: "Pães",
+    desc: "Pão recheado com frango temperado.",
+    price: 12,
+    icon: "🥪",
+    options: ["Sem recheio adicional", "Queijo", "Presunto", "Ovo"]
+  },
+
+  {
+    name: "Suco natural",
+    cat: "Bebidas",
+    desc: "Consulte os sabores disponíveis.",
+    price: 7,
+    icon: "🥤"
+  },
+
+  {
+    name: "Café",
+    cat: "Bebidas",
+    desc: "Café quentinho para acompanhar.",
+    price: 4,
+    icon: "☕"
+  },
+
+  {
+    name: "Leite",
+    cat: "Bebidas",
+    desc: "Leite servido quentinho ou frio.",
+    price: 5,
+    icon: "🥛"
+  },
+
+  {
+    name: "Frutas da estação",
+    cat: "Outros",
+    desc: "Porção de frutas frescas.",
+    price: 8,
+    icon: "🍉"
+  }
+
+];
+
+let cart = {};
+let category = "Todos";
+
+function money(value) {
+  return value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function renderProducts() {
+
+  const root = document.getElementById("products");
+  root.innerHTML = "";
+
+  products
+    .filter(p => category === "Todos" || p.cat === category)
+    .forEach((p, index) => {
+
+      const card = document.createElement("article");
+      card.className = "product";
+
+      let optionsHTML = "";
+
+      if (p.options) {
+        optionsHTML = `
+          <select id="option-${products.indexOf(p)}">
+            ${p.options.map(option =>
+              `<option value="${option}">${option}</option>`
+            ).join("")}
+          </select>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="product-icon">${p.icon}</div>
+
+        <h3>${p.name}</h3>
+
+        <p>${p.desc}</p>
+
+        ${optionsHTML}
+
+        <div class="product-bottom">
+          <span class="price">${money(p.price)}</span>
+
+          <button class="add-button">
+            Adicionar +
+          </button>
+        </div>
+      `;
+
+      card.querySelector("button").onclick = () => {
+
+        let option = "";
+
+        if (p.options) {
+          option = document.getElementById(
+            `option-${products.indexOf(p)}`
+          ).value;
+        }
+
+        const key = p.name + (option ? " | " + option : "");
+
+        if (!cart[key]) {
+          cart[key] = {
+            name: p.name,
+            option: option,
+            price: p.price,
+            quantity: 0
+          };
+        }
+
+        cart[key].quantity++;
+
+        updateCart();
+
+      };
+
+      root.appendChild(card);
+
+    });
+
+}
+
+function updateCart() {
+
+  const items = Object.values(cart);
+
+  const quantity = items.reduce(
+    (total, item) => total + item.quantity, 0
+  );
+
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity, 0
+  );
+
+  document.getElementById("topCount").textContent = quantity;
+
+  document.getElementById("cartCount").textContent =
+    quantity + (quantity === 1 ? " item" : " itens");
+
+  document.getElementById("cartTotal").textContent =
+    "Total: " + money(total);
+
+}
+
+function showOrder() {
+
+  const items = Object.values(cart);
+
+  if (items.length === 0) {
+    alert("Adicione pelo menos um produto ao seu pedido.");
+    return;
+  }
+
+  let message = "PEDIDO DE DEMONSTRAÇÃO\n\n";
+
+  items.forEach(item => {
+
+    message += item.quantity + "x " + item.name;
+
+    if (item.option) {
+      message += " (" + item.option + ")";
+    }
+
+    message += " — " +
+      money(item.price * item.quantity) + "\n";
+
+  });
+
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity, 0
+  );
+
+  message += "\nTOTAL: " + money(total);
+
+  message += "\n\nEsta página ainda não envia pedidos reais.";
+
+  alert(message);
+
+}
+
+document.querySelectorAll("#categories button").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document.querySelectorAll("#categories button")
+      .forEach(b => b.classList.remove("active"));
+
+    button.classList.add("active");
+
+    category = button.dataset.cat;
+
+    renderProducts();
+
+  });
+
+});
+
+renderProducts();
+updateCart();
+
+</script>
+
+</body>
+</html>
